@@ -1,44 +1,76 @@
 import React, { memo,useState } from 'react'
+import { connect } from 'react-redux'
+import { 
+    getEditTodo,
+    editTodo,
+    markCompleted,
+    removeTodo
+} from './store/actions'
+
+
 
 const TodoApp = memo(props => {
-    const { todo,editlistItem,listEditId,onEditList,index } = props
-    const [text,setText] = useState(todo.text)
-    const editingList = listEditId === todo.id
-    const editList = () =>{
-        onEditList({
-            ...todo,text
-        },index)
+    const {
+        todo,
+        markCompleted,
+        getEditTodo,
+        todoEditingId,
+        editTodo,
+        index,
+        removeTodo
+    } = props
+    const isEditing = todoEditingId === todo.id
+    const [text, setText] = useState(todo.text)
+    const onEditTodo = () => {
+        editTodo({
+            ...todo,
+            text
+        }, index)
+        getEditTodo('')
     }
 
     return(
-        <li className={`${ editingList ? 'editingList' : '' } ${ todo.isCompleted ? 'completed' : '' }`}>
-            {!editingList ? 
-                <div className="view">
-                <input className="toggle" type="checkbox" checked={todo.isCompleted} />
-                <label onClick={ () => editlistItem(todo.id)} >{todo.text}</label>
-                <button 
-                    className="destroy"  
-                >  
-                </button>
-            </div>
-            :
-            <input 
-                className="edit" 
-                type="text" 
-                value={text} 
-                onChange={e => setText(e.target.value)}
-                onBlur={editList}
-                onKeyPress={(e) => 
-                    {
-                        if(e.key === 'Enter') {
-                            editList()
-                        }
-                    }
-                }
-            />   
-        }
+        <li className={`${isEditing ? 'editing' : ''} ${todo.isCompleted ? 'completed' : ''}`}>
+            {
+                !isEditing ?
+                    <div className="view">
+                        <input
+                            className="toggle"
+                            type="checkbox"
+                            checked={todo.isCompleted}
+                            onChange={() => markCompleted(todo.id)}
+                        />
+                        <label onDoubleClick={() => getEditTodo(todo.id)}>{todo.text}</label>
+                        <button className="destroy" onClick={() => removeTodo(todo.id)} />
+                    </div> :
+                    <input
+                        className="edit"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        onBlur={onEditTodo}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter' && text) {
+                                onEditTodo()
+                            }
+                        }}
+                    />
+            }
         </li>
     )
 })
 
-export default TodoApp;
+const mapStateToProps = (state,ownProps) => {
+    return {
+        todoEditingId:state.todos.todoEditingId,
+        ...ownProps
+    }
+}
+
+const mapDispatchToProps = {
+    getEditTodo,
+    editTodo,
+    markCompleted,
+    removeTodo
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(TodoApp);

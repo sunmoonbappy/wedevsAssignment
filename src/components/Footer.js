@@ -1,6 +1,10 @@
 import React, {memo} from 'react'
+import { filterByStatus } from '../helpers/todosHelper'
+import { connect } from 'react-redux'
+import { setStatusFilter,clearCompleted } from './../components/store/actions'
 
-const Footer = (props => {
+const Footer = memo((props) => {
+    const { setStatusFilter, activeButton, clearCompleted, numOfTodosLeft, numOfTodos } = props
     const FilterBtns = [{
         title:'All',
         isActive:true,
@@ -20,42 +24,61 @@ const Footer = (props => {
     return(
         <footer className="footer">
             <span className="todo-count">
-                <strong>2</strong>
-                <span></span>
-                <span>items</span>
-                <span>left</span>
+                <strong>{numOfTodosLeft}</strong>
+                <span> </span>
+                <span>{numOfTodosLeft > 1 ? 'items' : 'item'}</span>
+                <span> left</span>
             </span>
             <ul className="filters">
-                {
-                    FilterBtns.map(btn=>(
-                        <FilterBtn key={`btn${btn.title}`} {...btn}/>
-                    ))
-                }
-                <FilterBtn/>
-                <FilterBtn/>
-                <FilterBtn/>
+                <li>
+                    <a
+                        href="#/"
+                        className={`${activeButton === 'ALL' ? "selected" : ''}`}
+                        onClick={() => setStatusFilter('ALL')}
+                    >
+                        All
+                    </a>
+                </li>
+                <span></span>
+                <li>
+                    <a
+                        href="#/active"
+                        className={`${activeButton === 'ACTIVE' ? "selected" : ''}`}
+                        onClick={() => setStatusFilter('ACTIVE')}
+                    >
+                        Active
+                    </a>
+                </li>
+                <span></span>
+                <li>
+                    <a
+                        href="#/completed"
+                        className={`${activeButton === 'COMPLETED' ? "selected" : ''}`}
+                        onClick={() => setStatusFilter('COMPLETED')}
+                    >
+                        Completed
+                    </a>
+                </li>
             </ul>
-            <button className="clear-completed">Clear Completed</button>
+            {
+                numOfTodosLeft < numOfTodos && <button className="clear-completed" onClick={clearCompleted}>Clear completed</button>
+            }
         </footer>
     )
 })
 
-const FilterBtn = (props => {
-    const { title,isActive,link,onClick } = props
-    return (
-        <>
-            <li>
-                <a 
-                 href={`#/${link}`} 
-                 className={`${isActive ? 'selected' : ''}`}
-                 onClick={onClick}
-                >
-                    {title}
-                </a>
-            </li>
-            <span></span>
-        </>
-    )
-})
+const mapStateToProps = (state) => {
+    const {todosList,status} = state.todos
+    return {
+        status,
+        numOfTodos:todosList.length,
+        numOfTodosLeft:filterByStatus(todosList,'ACTIVE').length
+    }
+}
 
-export default Footer;
+const mapDispatchToProps = {
+    setStatusFilter,
+    clearCompleted
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Footer);

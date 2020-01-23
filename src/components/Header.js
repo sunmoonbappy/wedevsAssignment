@@ -1,12 +1,14 @@
 import React, { memo,useState } from 'react';
+import { connect } from 'react-redux'
+import { addTodo } from './store/actions' 
 
 const Header = memo(props => {
     const [text,setText] = useState('');
-    const {addItem} = props;
+    const { addTodo } = props;
     const onAddTodo = ( e = {}) => {
         if(e.key === 'Enter' && text){
             console.log("Text",text);
-            addItem({
+            addTodo({
                 id:new Date().valueOf(),
                 text,
                 isCompleted:false
@@ -17,13 +19,26 @@ const Header = memo(props => {
     return(
         <header className="header">
             <h1>Todos</h1>
-            <input className="new-todo" 
+            <input
+                // type="checkbox" 
+                className="new-todo" 
+                placeholder="What need to be done ?"
                 value={text}
-                onChange={(e) => setText(e.target.value)}  
-                onKeyPress={(e) => onAddTodo(e)} 
+                onChange={(e) => setText(e.target.value)}
+                onKeyPress={onAddTodo}
             />
         </header>
     )
 })
 
-export default Header;
+const mapDispatchToProps = {
+    addTodo
+}
+
+const mapStateToProps = (state) => {
+    return {
+        isCheckedAll:state.todos.isCheckedAll
+    }
+}
+
+export default connect(null,mapDispatchToProps)(Header);
