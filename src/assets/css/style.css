@@ -6,20 +6,22 @@
 body {
     height: 100%;
     width: 100%;
+    background-color:#f8f8f8;
 }
 
-.App {
+.app {
     width: 50%;
     margin: 0 auto;
     display: table;
+    background-color: #fff;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
 
-.header h1{
+.layout h1{
     text-align: center;
     color: #F1DADF;
-    font-size: 75px;
-    font-weight: 600;
+    font-size: 85px;
+    font-weight: 500;
 }
   
 .todo-list {

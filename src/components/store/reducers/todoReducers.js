@@ -13,18 +13,7 @@ import { isNotCheckedAll, filterByStatus } from '../../../helpers/todosHelper'
 import TodoApp from '../../TodoApp'
 
 const INITIAL_STATE = {
-    todosList: [
-        {
-            id:1,
-            text:'todo 1',
-            isComplete:false
-        },
-        {
-            id:2,
-            text:'todo 2',
-            isComplete:false
-        },
-    ],
+    todosList: [],
     isNotCheckedAll: false,
     status: 'ALL',
     todoEditingId: ''
@@ -33,6 +22,7 @@ const INITIAL_STATE = {
 const todoReducers = (state = INITIAL_STATE,action) => {
     const { todosList,isCheckedAll } = state
     const list = JSON.parse(JSON.stringify(todosList))
+
     switch (action.type) {
         case ADD_TODO:
         return Object.assign({},state,{

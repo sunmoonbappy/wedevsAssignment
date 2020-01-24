@@ -1,5 +1,6 @@
 import React, { memo,useState } from 'react'
 import { connect } from 'react-redux'
+
 import { 
     getEditTodo,
     editTodo,
@@ -10,15 +11,7 @@ import {
 
 
 const TodoApp = memo(props => {
-    const {
-        todo,
-        markCompleted,
-        getEditTodo,
-        todoEditingId,
-        editTodo,
-        index,
-        removeTodo
-    } = props
+    const { todo,markCompleted,getEditTodo,todoEditingId,editTodo,index,removeTodo} = props
     const isEditing = todoEditingId === todo.id
     const [text, setText] = useState(todo.text)
     const onEditTodo = () => {

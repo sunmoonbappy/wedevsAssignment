@@ -18,9 +18,7 @@ const Header = memo(props => {
     }
     return(
         <header className="header">
-            <h1>Todos</h1>
             <input
-                // type="checkbox" 
                 className="new-todo" 
                 placeholder="What need to be done ?"
                 value={text}
